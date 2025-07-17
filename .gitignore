@@ -1,0 +1,11 @@
+bin/
+obj/
+
+tests/
+test.txt
+
+*.depend
+*.layout
+*.cbp
+.idea/
+.vscode/
