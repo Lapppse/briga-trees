@@ -1,27 +1,55 @@
 .DEFAULT_GOAL = all
+CC = g++
+WFLAGS = -Wall -Wextra
+CXXFLAGS = -std=c++20 -I ./include
 PERFFLAGS := -O3
 MEMFLAGS := -g -O1
-ERRFLAGS := # -Wall -Wextra
 
-all: tests gentest
+all: tests testgen
 
-tests: rb treap
+tests: rb treap avl splay set
 
 treap: treapperf treapmem
 
 treapperf:
-	g++ ./src/treap.cpp -o ./bin/treap $(PERFFLAGS)
+	$(CC) $(CXXFLAGS) ./src/treap.cpp -o ./build/treap $(PERFFLAGS)
 
 treapmem:
-	g++ ./src/treap.cpp -o ./bin/treapmemtest $(MEMFLAGS)
+	$(CC) $(CXXFLAGS) ./src/treap.cpp -o ./build/treapmemtest $(MEMFLAGS)
 
 rb: rbperf rbmem
 
 rbperf:
-	g++ ./src/rb.cpp -o ./bin/rb $(PERFFLAGS)
+	$(CC) $(CXXFLAGS) ./src/rb.cpp -o ./build/rb $(PERFFLAGS)
 
 rbmem:
-	g++ ./src/rb.cpp -o ./bin/rbmemtest $(MEMFLAGS)
+	$(CC) $(CXXFLAGS) ./src/rb.cpp -o ./build/rbmemtest $(MEMFLAGS)
 
-gentest:
-	g++ ./src/testgen.cpp -o ./bin/testgen -O3
+avl: avlperf avlmem
+
+avlperf:
+	$(CC) $(CXXFLAGS) ./src/avl.cpp -o ./build/avl $(PERFFLAGS)
+
+avlmem:
+	$(CC) $(CXXFLAGS) ./src/avl.cpp -o ./build/avlmemtest $(MEMFLAGS)
+
+splay: splayperf splaymem
+
+splayperf:
+	$(CC) $(CXXFLAGS) ./src/splay.cpp -o ./build/splay $(PERFFLAGS)
+
+splaymem:
+	$(CC) $(CXXFLAGS) ./src/splay.cpp -o ./build/splaymemtest $(MEMFLAGS)
+
+testgen:
+	# $(CC) $(CXXFLAGS) ./src/adaptivetestgen.cpp -o ./build/tg $(PERFFLAGS)
+	$(CC) $(CXXFLAGS) ./src/testgen.cpp -o ./build/tg $(PERFFLAGS)
+	
+set: setperf setmem
+
+setperf:
+	$(CC) $(CXXFLAGS) ./src/set.cpp -o ./build/set $(PERFFLAGS)
+
+setmem:
+	$(CC) $(CXXFLAGS) ./src/set.cpp -o ./build/setmemtest $(MEMFLAGS)
+

@@ -1,8 +1,14 @@
 bin/
+build/
 obj/
+include/
 
-tests/
+test/
+result/
+measure/
 test.txt
+input.txt
+output.txt
 
 *.depend
 *.layout
