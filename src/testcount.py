@@ -9,7 +9,7 @@ output_file = Path.cwd() / "output.txt"
 measure_dir = Path.cwd() / "measure"
 subdirs: list[str] = str(getenv("TEST_SUBDIR_NAMES")).split(";")
 trees = str(getenv("TEST_TREE_NAMES")).split(";")
-trees = ["set"]
+# trees = ["set"]
 
 test_priority = {"small": 0, "medium": 1, "large": 2}
 

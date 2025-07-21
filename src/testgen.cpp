@@ -12,6 +12,18 @@
 using namespace std;
 
 enum Operation { OP_INSERT = 1, OP_DELETE, OP_SEARCH, OP_START };
+enum Direction { DIR_DOWN = -1, DIR_UP = 1 };
+
+struct ContiguousStep {
+  int n, start_value;
+  Direction dir;
+  Operation op;
+
+  ContiguousStep(int n, int start_value, Direction dir, Operation op)
+      : start_value(start_value), n(n), dir(dir), op(op) {}
+
+  ContiguousStep() : start_value(0), n(1), dir(DIR_UP), op(OP_START) {}
+};
 
 struct Step {
   size_t n;
@@ -84,6 +96,24 @@ public:
   size_t size() const { return pq.size(); }
 };
 
+void generate_contiguous_test(const string &filename,
+                              const vector<ContiguousStep> &steps) {
+  ofstream fout(filename);
+  size_t q_tot = 0;
+  for (const ContiguousStep &s : steps) {
+    q_tot += s.n;
+  }
+  fout << q_tot << '\n';
+  for (const ContiguousStep &s : steps) {
+    // cout << s.start_value << endl;
+    for (int i = s.start_value, j = 0; j < s.n; i += 1 * s.dir, j++) {
+      fout << s.op << ' ' << i << '\n';
+    }
+  }
+  fout.flush();
+  fout.close();
+}
+
 void generate_test(const vector<Step> &steps, const string &filename) {
   random_device dev;
   mt19937 rng(dev());
@@ -136,29 +166,93 @@ void generate_test(const vector<Step> &steps, const string &filename) {
 
 struct TestGroup {
   const string name;
-  const int tests;
-  TestGroup(string name, int tests) : name(name), tests(tests) {}
+  const int queries;
+  TestGroup(string name, int queries) : name(name), queries(queries) {}
 };
 
 int main() {
-  const string base_filename = "./test/5_only_searches";
+  const string base_filename = "./test/9_contiguous_searches";
   const array<TestGroup, 3> groups = {TestGroup("small", 1'000),
                                       TestGroup("medium", 100'000),
                                       TestGroup("large", 10'000'000)};
   for (const auto &i : groups) {
+    // 1_random
+    // const vector<Step> steps = {Step(), Step(i.queries, INT_MAX - 1,
+    //                                          {OP_INSERT, OP_SEARCH,
+    //                                          OP_DELETE}, {1, 1, 1}, false,
+    //                                          false)};
+    // 2_small_k_random
+    // const vector<Step> steps = {Step(), Step(i.queries, 1'000,
+    //                                          {OP_INSERT, OP_DELETE,
+    //                                          OP_SEARCH}, {1, 1, 1}, false,
+    //                                          false)};
+    // 3_eff_random
+    // const vector<Step> steps = {Step(), Step(i.queries, INT_MAX - 1,
+    //                                          {OP_INSERT, OP_DELETE,
+    //                                          OP_SEARCH}, {1, 1, 1}, true,
+    //                                          true)};
+    // 4_only_inserts
+    // const vector<Step> steps = {
+    //     Step(), Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, false,
+    //     false)};
     // 5_only_searches
-    const vector<Step> steps = {
-        Step(i.tests, INT_MAX - 1, {OP_INSERT}, {1}, true, true), Step(),
-        Step(i.tests, INT_MAX - 1, {OP_SEARCH}, {1}, true, true)};
     // const vector<Step> steps = {
-    //     Step(i.tests, INT_MAX - 1, {OP_INSERT}, {1}, false, false)};
+    //     Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, true, true), Step(),
+    //     Step(i.queries, INT_MAX - 1, {OP_SEARCH}, {1}, true, true)};
+    // 6_only_deletes
     // const vector<Step> steps = {
-    //     Step(i.tests, INT_MAX - 1, {OP_INSERT}, {1}, false, false)};
-    const string prep = format("{}/{}/", base_filename, i.name);
-    for (int j = 1; j <= 20; j++) {
-      string filename = prep + format("{}.txt", j);
-      generate_test(steps, filename);
-      cout << "generated " << filename << '\n';
-    }
+    //     Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, true, true), Step(),
+    //     Step(3 * i.queries, INT_MAX - 1, {OP_DELETE}, {1}, true, true)};
+
+    // generate_test
+    // for (int j = 1; j <= 20; j++) {
+    //   string filename = prep + format("{}.txt", j);
+    //   generate_test(steps, filename);
+    //   cout << "generated " << filename << '\n';
+    // }
+
+    // Operation op_first = OP_INSERT;
+    // int n = i.queries / 5;
+    // 7_contiguous_inserts
+    // vector<ContiguousStep> steps = {
+    //     ContiguousStep(),
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
+    //     ContiguousStep(n, 1, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_first)};
+    //  8_contiguous_deletes
+    // Operation op_second = OP_DELETE;
+    // vector<ContiguousStep> steps = {
+    //     ContiguousStep(3 * n, INT_MAX / 2, DIR_UP, op_first),
+    //     ContiguousStep(3 * n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
+    //     ContiguousStep(3 * n, 1, DIR_UP, op_first),
+    //     ContiguousStep(3 * n, INT_MAX / 4, DIR_UP, op_first),
+    //     ContiguousStep(3 * n, INT_MAX / 4 * 3, DIR_DOWN, op_first),
+    //     ContiguousStep(),
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_second),
+    //     ContiguousStep(n, 1, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_second)};
+    // 9_contiguous_searches
+    // Operation op_second = OP_SEARCH;
+    // vector<ContiguousStep> steps = {
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
+    //     ContiguousStep(n, 1, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_first),
+    //     ContiguousStep(),
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_second),
+    //     ContiguousStep(n, 1, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_second)};
+
+    // generate_contiguous_test
+    // const string filename = format("{}/{}.txt", base_filename, i.name);
+    // generate_contiguous_test(filename, steps);
+    // cout << "generated " << filename << '\n';
   }
 }
