@@ -173,90 +173,100 @@ struct TestGroup {
 };
 
 int main() {
-  const string base_filename = "./test/1_random";
-  // const array<TestGroup, 3> groups = {TestGroup("small", 1'000),
-  //                                     TestGroup("medium", 100'000),
-  //                                     TestGroup("large", 10'000'000)};
-  // for (const auto &i : groups) {
-  // 1_random
-  // const vector<Step> steps = {Step(), Step(i.queries, INT_MAX - 1,
-  //                                          {OP_INSERT, OP_SEARCH, OP_DELETE},
-  //                                          {1, 1, 1}, false, false)};
-  // // 2_small_k_random
-  // const vector<Step> steps = {Step(), Step(i.queries, 1'000,
-  //                                          {OP_INSERT, OP_DELETE,
-  //                                          OP_SEARCH}, {1, 1, 1}, false,
-  //                                          false)};
-  // 3_eff_random
-  // const vector<Step> steps = {Step(), Step(i.queries, INT_MAX - 1,
-  //                                          {OP_INSERT, OP_DELETE,
-  //                                          OP_SEARCH}, {1, 1, 1}, true,
-  //                                          true)};
-  // 4_only_inserts
-  // const vector<Step> steps = {
-  //     Step(), Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, false,
-  //     false)};
-  // 5_only_searches
-  // const vector<Step> steps = {
-  //     Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, true, true), Step(),
-  //     Step(i.queries, INT_MAX - 1, {OP_SEARCH}, {1}, true, true)};
-  // 6_only_deletes
-  // const vector<Step> steps = {
-  //     Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, true, true), Step(),
-  //     Step(3 * i.queries, INT_MAX - 1, {OP_DELETE}, {1}, true, true)};
+  const string test_dir_name = "./test/";
+  const array<TestGroup, 3> groups = {TestGroup("small", 1'000),
+                                      TestGroup("medium", 100'000),
+                                      TestGroup("large", 10'000'000)};
+  for (const auto &i : groups) {
+    // 1_random
+    // const string base_filename = test_dir_name + "1_random";
+    // const vector<Step> steps = {Step(), Step(i.queries, INT_MAX - 1,
+    //                                          {OP_INSERT, OP_SEARCH,
+    //                                          OP_DELETE}, {1, 1, 1}, false,
+    //                                          false)};
+    // 2_small_k_random
+    // const string base_filename = test_dir_name + "2_small_k_random";
+    // const vector<Step> steps = {Step(), Step(i.queries, 1'000,
+    //                                          {OP_INSERT, OP_DELETE,
+    //                                          OP_SEARCH}, {1, 1, 1}, false,
+    //                                          false)};
+    // 3_eff_random
+    // const string base_filename = test_dir_name + "3_eff_random";
+    // const vector<Step> steps = {Step(), Step(i.queries, INT_MAX - 1,
+    //                                          {OP_INSERT, OP_DELETE,
+    //                                          OP_SEARCH}, {1, 1, 1}, true,
+    //                                          true)};
+    // 4_only_inserts
+    // const string base_filename = test_dir_name + "4_only_inserts";
+    // const vector<Step> steps = {
+    //     Step(), Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, false,
+    //     false)};
+    // 5_only_searches
+    // const string base_filename = test_dir_name + "5_only_searches";
+    // const vector<Step> steps = {
+    //     Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, true, true), Step(),
+    //     Step(i.queries, INT_MAX - 1, {OP_SEARCH}, {1}, true, true)};
+    // 6_only_deletes
+    // const string base_filename = test_dir_name + "6_only_deletes";
+    // const vector<Step> steps = {
+    //     Step(i.queries, INT_MAX - 1, {OP_INSERT}, {1}, true, true), Step(),
+    //     Step(3 * i.queries, INT_MAX - 1, {OP_DELETE}, {1}, true, true)};
 
-  // generate_test
-  // const string prep = format("{}/{}", base_filename, i.name);
-  // filesystem::create_directories(prep);
-  // for (int j = 1; j <= 20; j++) {
-  //   string filename = format("{}/{}.txt", prep, j);
-  //   generate_test(steps, filename);
-  //   cout << "generated " << filename << '\n';
-  // }
+    // generate_test
+    // const string prep = format("{}/{}", base_filename, i.name);
+    // filesystem::create_directories(prep);
+    // for (int j = 1; j <= 20; j++) {
+    //   string filename = format("{}/{}.txt", prep, j);
+    //   generate_test(steps, filename);
+    //   cout << "generated " << filename << '\n';
+    // }
 
-  // Operation op_first = OP_INSERT;
-  // int n = i.queries / 5;
-  // 7_contiguous_inserts
-  // vector<ContiguousStep> steps = {
-  //     ContiguousStep(),
-  //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_first),
-  //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
-  //     ContiguousStep(n, 1, DIR_UP, op_first),
-  //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_first),
-  //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_first)};
-  //  8_contiguous_deletes
-  // Operation op_second = OP_DELETE;
-  // vector<ContiguousStep> steps = {
-  //     ContiguousStep(3 * n, INT_MAX / 2, DIR_UP, op_first),
-  //     ContiguousStep(3 * n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
-  //     ContiguousStep(3 * n, 1, DIR_UP, op_first),
-  //     ContiguousStep(3 * n, INT_MAX / 4, DIR_UP, op_first),
-  //     ContiguousStep(3 * n, INT_MAX / 4 * 3, DIR_DOWN, op_first),
-  //     ContiguousStep(),
-  //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_second),
-  //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_second),
-  //     ContiguousStep(n, 1, DIR_UP, op_second),
-  //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_second),
-  //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_second)};
-  // 9_contiguous_searches
-  // Operation op_second = OP_SEARCH;
-  // vector<ContiguousStep> steps = {
-  //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_first),
-  //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
-  //     ContiguousStep(n, 1, DIR_UP, op_first),
-  //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_first),
-  //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_first),
-  //     ContiguousStep(),
-  //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_second),
-  //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_second),
-  //     ContiguousStep(n, 1, DIR_UP, op_second),
-  //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_second),
-  //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_second)};
+    // Operation op_first = OP_INSERT;
+    // int n = i.queries / 5;
+    // 7_contiguous_inserts
+    // base_filename += "7_contiguous_inserts";
+    // vector<ContiguousStep> steps = {
+    //     ContiguousStep(),
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
+    //     ContiguousStep(n, 1, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_first)};
+    //  8_contiguous_deletes
+    //  base_filename += "8_contiguous_deletes";
+    // Operation op_second = OP_DELETE;
+    // vector<ContiguousStep> steps = {
+    //     ContiguousStep(3 * n, INT_MAX / 2, DIR_UP, op_first),
+    //     ContiguousStep(3 * n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
+    //     ContiguousStep(3 * n, 1, DIR_UP, op_first),
+    //     ContiguousStep(3 * n, INT_MAX / 4, DIR_UP, op_first),
+    //     ContiguousStep(3 * n, INT_MAX / 4 * 3, DIR_DOWN, op_first),
+    //     ContiguousStep(),
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_second),
+    //     ContiguousStep(n, 1, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_second)};
+    // 9_contiguous_searches
+    // base_filename += "9_contiguous_searches";
+    // Operation op_second = OP_SEARCH;
+    // vector<ContiguousStep> steps = {
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_first),
+    //     ContiguousStep(n, 1, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_first),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_first),
+    //     ContiguousStep(),
+    //     ContiguousStep(n, INT_MAX / 2, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 2 - 1, DIR_DOWN, op_second),
+    //     ContiguousStep(n, 1, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4, DIR_UP, op_second),
+    //     ContiguousStep(n, INT_MAX / 4 * 3, DIR_DOWN, op_second)};
 
-  // generate_contiguous_test
-  // filesystem::create_directories(format("{}/{}", base_filename, i.name));
-  // const string filename = format("{}/{}/1.txt", base_filename, i.name);
-  // generate_contiguous_test(filename, steps);
-  // cout << "generated " << filename << '\n';
-}
+    // generate_contiguous_test
+    // filesystem::create_directories(format("{}/{}", base_filename, i.name));
+    // const string filename = format("{}/{}/1.txt", base_filename, i.name);
+    // generate_contiguous_test(filename, steps);
+    // cout << "generated " << filename << '\n';
+  }
 }

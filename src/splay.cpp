@@ -1,3 +1,4 @@
+#include <climits>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -78,7 +79,7 @@ node *splay(node *t) {
 pair<node *, node *> split(node *t, int x) {
   if (!t)
     return {0, 0};
-  int m = 2e9;
+  int m = INT_MAX;
   node *mnode = 0;
   while (true) {
     if (x <= t->x)
@@ -96,7 +97,7 @@ pair<node *, node *> split(node *t, int x) {
         break;
     }
   }
-  if (m == 2e9) {
+  if (m == INT_MAX) {
     while (t->p)
       t = t->p;
     return {t, 0};
