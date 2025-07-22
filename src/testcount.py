@@ -17,15 +17,30 @@ for subdir_name in subdirs:
     print(subdir_name)
     for tree in trees:
         print(tree)
+        worst_time = -1
+        best_time = 1_000_000_000_000
+        worst_mem = -1
+        best_mem = 1_000_000_000_000_000
         for i in sorted((result_dir / subdir_name / tree).iterdir(), key=lambda x: test_priority[x.name]):
             mem_sum: float = 0
             time_sum: int = 0
             count = 0
             for j in i.iterdir():
                 measure_file = measure_dir / subdir_name / tree / i.name / j.name
-                mem_sum += float(measure_file.read_text().split(" ")[3])
+                test_mem = float(measure_file.read_text().split(" ")[3])
+                worst_mem = max(worst_mem, test_mem)
+                best_mem = min(best_mem, test_mem)
+                mem_sum += test_mem
                 result_file = result_dir / subdir_name / tree / i.name / j.name
-                time_sum += int(1_000_000_000 * float(result_file.read_text()))
+                test_time = int(1_000_000_000 * float(result_file.read_text()))
+                time_sum += test_time
+                worst_time = max(worst_time, test_time)
+                best_time = min(best_time, test_time)
                 count += 1
-            print(f"{i.name} time: {time_sum / count / 1_000_000_000} seconds mem: {mem_sum / count / 1024} MiB")
+            time_sum = time_sum - worst_time - best_time
+            mem_sum = mem_sum - worst_mem - best_mem
+            print(
+                f"{i.name} time: {time_sum / (count - 2) / 1_000_000_000} seconds ",
+                f"mem: {mem_sum / (count - 2) / 1024} MiB"
+            )
         print()
